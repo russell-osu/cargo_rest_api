@@ -1,0 +1,10 @@
+#*******************************************************************
+ # This code is based on the code found in the GCP repository:
+ # https://github.com/GoogleCloudPlatform/nodejs-getting-started.git
+ # 
+ # It is, however, significantly modified
+ # ****************************************************************/
+
+runtime: nodejs10
+
+instance_class: F2
