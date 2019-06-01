@@ -19,8 +19,8 @@ const USER = "user";
 // Automatically parse request body as JSON
 router.use(bodyParser.json());
 
-const clientID = "7X75UqLWuyXPsGeAlBGALobgDjkDZKzN";
-const clientSecret = "j1SWOIQ_htfRxpslyM-piNozqmBPPVFChnIkCB9Hr8U3RzXySPQ6NXjo6DtKW9PO";
+const clientID = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
+const clientSecret = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
 
 /*******************************************************************
  * Login endpoint
