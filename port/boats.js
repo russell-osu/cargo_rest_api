@@ -67,11 +67,11 @@ router.get('/', util.checkJwt, async (req, res, next) => {
 
 
 
-/**
+/*********************************
  * GET /boats/:id
  *
  * Retrieve a single boat by id.
- */
+ **********************************/
 router.get('/:id', util.checkJwt, async (req, res, next) => {
   //ensure user is in db (is authenticated to access site)
   var authenticated = await util.isAuthenticatedUser(req);
@@ -100,11 +100,11 @@ router.get('/:id', util.checkJwt, async (req, res, next) => {
 });
 
 
-/**
+/***********************************
  * GET /boats/{boat_id}/cargo
  *
  * Retrieve a list of all cargo on a given boat
- */
+ **********************************/
 
 router.get('/:id/cargo', util.checkJwt, async (req, res, next) => {
   //ensure user is in db (is authenticated to access site)
@@ -124,14 +124,14 @@ router.get('/:id/cargo', util.checkJwt, async (req, res, next) => {
   model.list(CARGO, req, 5, "carrier.id", "=", req.params.id).then( entities => {
 
     //add link to cargo
-    util.addLiveLinks(req, entities[0], "self")
+    util.addLiveLinks(req, entities[0], "self", null, "/cargo");
     //add link to carriers
     entities[0].forEach( item => {
         if(item.carrier.hasOwnProperty("id"))
             util.addLiveLinks(req, [item.carrier], "self", null, "/boats");
     });
     /* * Add cursor link * */
-    const results = util.addCursorLink(req, entities[0], entities[1], entities[2], "/cargo");
+    const results = util.addCursorLink(req, entities[0], entities[1], -1, "/cargo");
 
     /* * Respond * */
     util.respondCheck406(req, res, results);
@@ -144,11 +144,11 @@ router.get('/:id/cargo', util.checkJwt, async (req, res, next) => {
 
 
 
-/**
+/************************************
  * POST /boats
  *
  * Create a new boat.
- */
+ ***********************************/
 router.post('/', util.checkJwt, async (req, res, next) => {
   //ensure user is in db (is authenticated to access site)
   var authenticated = await util.isAuthenticatedUser(req);
@@ -210,11 +210,11 @@ router.post('/rapidCreate', (req, res, next) => {
 
 
 
-/**
+/************************************
  * PUT /boats/:id
  *
  * Update a boat.
- */
+ ***********************************/
 router.put('/:id', util.checkJwt, async (req, res, next) => {
   //ensure user is in db (is authenticated to access site)
   var authenticated = await util.isAuthenticatedUser(req);
@@ -262,11 +262,11 @@ router.put('/:id', util.checkJwt, async (req, res, next) => {
 });
 
 
-/**
+/*************************************
  * DELETE /boats/:id
  *
  * Delete a boat.
- */
+ ************************************/
 router.delete('/:id', util.checkJwt, async (req, res, next) => {
     //ensure user is in db (is authenticated to access site)
     var authenticated = await util.isAuthenticatedUser(req);
@@ -340,11 +340,11 @@ router.delete('/delete/all', (req, res) => {
  * 
  * ****************************************************************/
 
- /**
+ /*************************************
  * PUT boats/:boat_id/cargo/:cargo_id
  *
  * Add cargo to a boat.
- */
+ ************************************/
 router.put('/:boat_id/cargo/:cargo_id', util.checkJwt, async (req, res, next) => {
       //ensure user is in db (is authenticated to access site)
       var authenticated = await util.isAuthenticatedUser(req);

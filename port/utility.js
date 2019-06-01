@@ -79,13 +79,13 @@ const getID = (kind, propKey, propVal) => new Promise((resolve) => {
   }
 
   //add cursor link to entity list if it pagination required
-  //TODO: add item count feature to this function
+  //add item count feature to this function
   function addCursorLink(req, entities, cursor, count, path=null){
     
     const results = {};
     results.items = entities;
     //add item count (if included in arguments)
-    results.total_items = count;
+    if(count >= 0) {results.total_items = count;}
 
     //construct pre-id portion of url contingent on whether a path was sent
     if(path){
@@ -212,6 +212,7 @@ async function removeCarrierInfoCargo(cargo){
   if(cargo !== undefined){
     delete cargo.carrier.name;
     delete cargo.carrier.id;
+    delete cargo.carrier.owner;
     await model.update(cargo.id, cargo, "cargo", (err, entity) => {});
   }
 }

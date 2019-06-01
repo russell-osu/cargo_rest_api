@@ -51,11 +51,11 @@ router.post('/login', function(req, res){
   });
   
   /*******************************************************************
-   * Sign-up endpoint
+   * Sign-up endpoint (creates a user entity on Auth0 and in api database)
    * http://classes.engr.oregonstate.edu/eecs/perpetual/cs493-400/modules/7-more-security/3-node-authorization/
    * ****************************************************************/
   
-  router.post('/signup', function(req, res){
+  router.post('/', function(req, res){
     const email = req.body.email;
     const password = req.body.password;
     var options = { method: 'POST',
@@ -83,8 +83,9 @@ router.post('/login', function(req, res){
                   return;
                 }
                 //user entity created
+                res.status(201).send(entity);
               });
-            res.send(body);
+            
         }
     });
   
@@ -97,11 +98,11 @@ router.post('/login', function(req, res){
  * 
  * ****************************************************************/
 
-/**
+/************************************
  * GET /users
  *
  * Retrieve a list of all users.
- */
+ ***********************************/
 
 router.get('/', (req, res, next) => {
 
@@ -116,21 +117,17 @@ router.get('/', (req, res, next) => {
 });
 
 
-/**
- * GET /cargo/:id
+/************************************
+ * GET /user/:id
  *
- * Retrieve a single cargo by id.
- */
+ * Retrieve a single user by id.
+ ***********************************/
 router.get('/:id', (req, res, next) => {
-  model.readPromise(req.params.id, CARGO)
+  model.readPromise(req.params.id, USER)
     .then( entity => {
       if(entity){ // if entity is in db
-        //add live to cargo
+        //add live link to user
         util.addLiveLinks(req, [entity], "self")
-        //add link to carrier
-        if(entity.carrier.hasOwnProperty("id"))
-            util.addLiveLinks(req, [entity.carrier], "self", null, "/boats");
-        
         /* * Respond * */
         util.respondCheck406(req, res, entity);
       }
@@ -140,63 +137,12 @@ router.get('/:id', (req, res, next) => {
 });
 
 
-/**
- * POST /cargo
- *
- * Create a new cargo.
- */
 
-router.post('/', (req, res, next) => {
-  var bodyModel = {weight: 999, carrier: {}, content: "string", delivery_date: "string"};
-  if(util.validateReqBody(req.body, bodyModel)) {//if body is well-formed
-
-    model.create(req.body, CARGO, (err, entity) => {
-        if (err) {
-        next(err);
-        return;
-        }
-        util.addLiveLinks(req, [entity], "self")
-        res.status(201).json(entity);
-        });
-
-  }else {//if body is not well-formed
-    res.status(400).send("Request body is not well-formed. Use: " + JSON.stringify(bodyModel));
-  }
-});
-
-
-
-
-
-/**
- * PUT /cargo/:id
- *
- * Update a cargo.
- */
-router.put('/:id', (req, res, next) => {
-    var bodyModel = {weight: 999, carrier: {}, content: "string", delivery_date: "string"};
-    if(util.validateReqBody(req.body, bodyModel)) {//if body is well-formed
-
-        model.update(req.params.id,req.body, CARGO, (err, entity) => {
-        if (err) {
-            next(err);
-            return;
-        }
-        /* * Respond * */
-        util.respond303(req, res, "/cargo/" + req.params.id);
-        });
-
-    }else {//if body is not well-formed
-        res.status(400).send("Request body is not well-formed. Use: " + JSON.stringify(bodyModel));
-    }
-});
-
-
-/**
+/************************************
  * DELETE /users/:id
  *
  * Delete a user.
- */
+ ***********************************/
 router.delete('/:id', (req, res, next) => {
         model.delete(req.params.id, USER, (err, apiResp) => {
           if (err) {
@@ -209,19 +155,11 @@ router.delete('/:id', (req, res, next) => {
 
 
 
-//can't delete all cargo
-router.delete('/', function(req, res){
-  res.set("Allow", "GET, POST");
-  res.status(405).end();
-});
-
-
-
-//delete all cargo (just for testing)
-router.delete('/delete-all', function(req, res){
-  let kind = CARGO;
-  model.list(kind).then( entities => {
-    entities.forEach( item =>{  
+//delete all users (just for testing)
+router.delete('/delete/all', (req, res) => {
+  let kind = USER;
+  model.listDelete(kind).then( entities => {
+    entities.forEach( item =>{
       model.delete(item.id, kind, (err, apiResp) => {
         if (err) {
           next(err);
@@ -240,9 +178,9 @@ router.delete('/delete-all', function(req, res){
 
 
 
-/**
+/************************************
  * Errors on "/api/books/*" routes.
- */
+ ***********************************/
 router.use((err, req, res, next) => {
   // Format error and forward to generic error handler for logging and
   // responding to the request

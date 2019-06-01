@@ -25,11 +25,11 @@ router.use(bodyParser.json());
  * 
  * ****************************************************************/
 
-/**
+/************************************
  * GET /cargo
  *
  * Retrieve a list of all cargo.
- */
+ ***********************************/
 
 router.get('/', util.checkJwt, async (req, res, next) => {
   //ensure user is in db (is authenticated to access site)
@@ -61,11 +61,11 @@ router.get('/', util.checkJwt, async (req, res, next) => {
 });
 
 
-/**
+/************************************
  * GET /cargo/:id
  *
  * Retrieve a single cargo by id.
- */
+ ***********************************/
 router.get('/:id', util.checkJwt, async (req, res, next) => {
   //ensure user is in db (is authenticated to access site)
   var authenticated = await util.isAuthenticatedUser(req);
@@ -91,11 +91,11 @@ router.get('/:id', util.checkJwt, async (req, res, next) => {
 });
 
 
-/**
+/************************************
  * POST /cargo
  *
  * Create a new cargo.
- */
+ ***********************************/
 
 router.post('/', util.checkJwt, async (req, res, next) => {
   //ensure user is in db (is authenticated to access site)
@@ -122,11 +122,11 @@ router.post('/', util.checkJwt, async (req, res, next) => {
 });
 
 
-/**
+/************************************
  * PUT /cargo/:id
  *
  * Update a cargo.
- */
+ ***********************************/
 router.put('/:id', util.checkJwt, async (req, res, next) => {
     //ensure user is in db (is authenticated to access site)
     var authenticated = await util.isAuthenticatedUser(req);
@@ -159,11 +159,11 @@ router.put('/:id', util.checkJwt, async (req, res, next) => {
 });
 
 
-/**
+/************************************
  * DELETE /cargo/:id
  *
  * Delete a cargo.
- */
+ ***********************************/
 router.delete('/:id', util.checkJwt, async (req, res, next) => {
   //ensure user is in db (is authenticated to access site)
   var authenticated = await util.isAuthenticatedUser(req);
@@ -238,9 +238,9 @@ router.delete('/delete/all', (req, res) => {
 
 
 
-/**
+/************************************
  * Errors on "/api/books/*" routes.
- */
+ ***********************************/
 router.use((err, req, res, next) => {
   // Format error and forward to generic error handler for logging and
   // responding to the request
